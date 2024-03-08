@@ -7,6 +7,8 @@ import java.util.Map;
 class UserProfileApp {
 
     static Map<String, UserProfile> userProfiles = new HashMap<>();
+    static Map<String, CreditCard> userCreditCards = new HashMap<>();
+
 
     public static void main(String[] args) {
         Javalin app = Javalin.create().start(7000);
@@ -43,6 +45,14 @@ class UserProfileApp {
             }
         });
 
+        // Endpoint for creating a credit card for a user
+        app.post("/user/{username}/{creditcard}", ctx -> {
+            String username = ctx.pathParam("username");
+            CreditCard creditCard = ctx.bodyAsClass(CreditCard.class);
+            userCreditCards.put(username, creditCard);
+            ctx.status(201).result("Credit card created successfully");
+        });
+
 
     }
 
@@ -52,6 +62,7 @@ class UserProfileApp {
         private String name;
         private String email;
         private String address;
+
         // Add more fields as needed
 
         public String getUsername() {
@@ -93,5 +104,14 @@ class UserProfileApp {
         public void setAddress(String address) {
             this.address = address;
         }
+    }
+
+    static class CreditCard {
+        private String cardNumber;
+        private String expirationDate;
+        // Add more fields as needed
+
+        // Constructor, getters and setters
+        // ...
     }
 }
